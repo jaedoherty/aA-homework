@@ -16,14 +16,16 @@
         if count < max_length
             cache << el 
         else
+            if !cache.include?(el)
             cache.shift
             cache << el
+            end
         end
     end
 
     def show
       # shows the items in the cache, with the LRU item first
-      puts cache.dup
+      p cache.dup
     end
 
     private
