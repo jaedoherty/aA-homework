@@ -8,17 +8,21 @@
 
     def count
       # returns number of elements currently in cache
-      @cache.length
+       @cache.length
+      
     end
 
     def add(el)
       # adds element to cache according to LRU principle
-        if count < max_length
+        if self.count < @max_length
             cache << el 
         else
             if !cache.include?(el)
-            cache.shift
-            cache << el
+                cache.shift
+                cache << el
+            else
+                cache.delete(el)
+                cache << el
             end
         end
     end
@@ -39,7 +43,7 @@
   johnny_cache.add("I walk the line")
   johnny_cache.add(5)
 
-  johnny_cache.count # => returns 2
+  p johnny_cache.count # => returns 2
 
   johnny_cache.add([1,2,3])
   johnny_cache.add(5)
