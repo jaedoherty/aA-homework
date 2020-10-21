@@ -24,7 +24,16 @@ class Play
   end
 
   def self.find_by_playwright(name)
-    PlayDBConnection.instance.execute("SELECT * FROM plays JOIN playwrights ON id = playwright_id WHERE playwrights.name = name")
+    PlayDBConnection.instance.execute("SELECT * FROM plays JOIN playwrights ON id = playwright_id WHERE playwrights.name = 'name'")
+  end
+
+  def self.all 
+    results = PlayDBConnection.instance.execute('SELECT * FROM 'plays'')
+    results.map { |result| Play.new(result) }
+  end
+
+  def self.find_by_name(name)
+    PlayDBConnection.instance.execute("SELECT * FROM plays WHERE plays.name = 'name'")
   end
 
   def initialize(options)
@@ -33,6 +42,7 @@ class Play
     @year = options['year']
     @playwright_id = options['playwright_id']
   end
+
 
   def create
     raise "#{self} already in database" if self.id
@@ -54,6 +64,22 @@ class Play
         title = ?, year = ?, playwright_id = ?
       WHERE
         id = ?
+    SQL
+  end
+
+  def get_plays(playwright)
+    raise "#{self} not in database" unless self.id
+    PlayDBConnection.instance.execute(<<-SQL)
+      SELECT
+        *
+      FROM
+        plays
+      JOIN
+        playwrights
+        ON
+          id = playwright_id
+      WHERE
+        playwright.name = 'name'; 
     SQL
   end
 end
